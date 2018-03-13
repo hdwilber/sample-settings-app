@@ -1,21 +1,28 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import * as AppActions from './redux/app/actions'
+import { Grid, Header } from 'semantic-ui-react'
 
 class App extends Component {
+  componentDidMount() {
+    const { appStart } = this.props
+    appStart()
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+      <Grid container>
+        <Grid.Column width={16}>
+          <Header size="huge">Hello World</Header>
+        </Grid.Column>
+      </Grid>
+    )
   }
 }
 
-export default App;
+export default connect( state => ({
+  app: state.app,
+}),
+dispatch => ({
+  appStart: () => dispatch(AppActions.startApp()),
+}))(App);
