@@ -19,7 +19,7 @@ export function login(data) {
       } else {
         return dispatch({
           type: LOGIN.FAILED,
-          payload: new Error('Bad credentials')
+          payload: 'Wrong credentials'
         })
       }
     }, 1000)
