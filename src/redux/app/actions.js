@@ -1,4 +1,5 @@
 import { createAction } from '../utils'
+import { restore } from '../account/actions'
 
 export const START = createAction('APP_START')
 
@@ -6,13 +7,14 @@ export function startApp() {
   return (dispatch, getState) => {
     const startTime = Date.now()
     setTimeout( () => {
-      console.log(startTime)
-      console.log(Date.now())
+
+      dispatch(restore())
+
       return dispatch({
         type: START.SUCCESS,
         payload: (Date.now() -  startTime),
       })
-    }, 2000)
+    }, 200)
 
     return dispatch({
       type: START.INIT

@@ -24,9 +24,9 @@ class App extends Component {
     appStart()
   }
 
-  handleLogin(data) {
+  handleLogin(data, options) {
     const { login } = this.props
-    login(data)
+    login(data, options)
   }
 
   handleOpenLogin() {
@@ -72,10 +72,11 @@ class App extends Component {
   }
 
   renderSettings() {
+    const { account } = this.props
     return (
       <Grid container>
         <Grid.Column width={16}>
-          <Header size="huge">Settings to configure your information</Header>
+          <Header size="huge">Settings to configure your information ({account && account.email}) </Header>
           <Settings onSave={this.handleSettingsSave}
             onReset={this.handleSettingsReset}
           />
@@ -105,7 +106,7 @@ export default connect( state => ({
 }),
 dispatch => ({
   appStart: () => dispatch(AppActions.startApp()),
-  login: (data) => dispatch(AccountActions.login(data)),
+  login: (data, opts) => dispatch(AccountActions.login(data, opts)),
   logout: () => dispatch(AccountActions.logout()),
 })) (App)
 

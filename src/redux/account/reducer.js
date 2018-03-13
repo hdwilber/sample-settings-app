@@ -31,6 +31,28 @@ export default function reducer(state = initialState, action) {
         error: action.payload,
       }
     }
+    case Actions.LOGIN_RESTORE.INIT: {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+
+    case Actions.LOGIN_RESTORE.SUCCESS: {
+      const { email } = action.payload 
+      return {
+        ...state,
+        loading: false,
+        loggedIn: true,
+        email,
+      }
+    }
+    case Actions.LOGIN_RESTORE.FAILED: {
+      return {
+        ...initialState,
+        error: action.payload,
+      }
+    }
   }
   return state
 }

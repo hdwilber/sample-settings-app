@@ -17,10 +17,12 @@ class LoginModal extends React.Component {
     this.state = {
       email: '',
       password: '',
+      save: false,
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleCheckboxChange = this.handleCheckboxChange.bind(this)
   }
 
   handleChange(e, { name, value }) {
@@ -32,10 +34,18 @@ class LoginModal extends React.Component {
   handleSubmit(e) {
     const { onLogin } = this.props
     e.preventDefault()
-    const { email, password } = this.state
+    const { save, email, password } = this.state
     onLogin({
       email,
       password,
+    }, {
+      save, 
+    })
+  }
+
+  handleCheckboxChange(e, {name, checked}) {
+    this.setState({
+      [name]: checked,
     })
   }
 
@@ -52,8 +62,18 @@ class LoginModal extends React.Component {
         </Modal.Header>
         <Modal.Content>
           <Form onSubmit={this.handleSubmit}>
-            <Form.Input name="email" type="email" label="Email" onChange={this.handleChange}/>
-            <Form.Input name="password" type="password" label="Password" onChange={this.handleChange}/>
+            <Form.Input 
+              value={this.state.email}
+              name="email" type="email" label="Email" onChange={this.handleChange}/>
+            <Form.Input 
+              value={this.state.password}
+              name="password" type="password" label="Password" onChange={this.handleChange}/>
+            <Form.Checkbox 
+              name="save" 
+              value={this.state.save}
+              onChange={this.handleCheckboxChange}
+              label="Keep session"
+            />
 
             <Button.Group>
               <Button loading={loading}>Login</Button>
