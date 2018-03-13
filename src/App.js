@@ -1,8 +1,15 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import logo from './logo.svg'
+import './App.css'
+import * as AppActions from './redux/app/actions'
 
 class App extends Component {
+  componentDidMount() {
+    const { appStart } = this.props
+    appStart()
+  }
+
   render() {
     return (
       <div className="App">
@@ -18,4 +25,9 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect( state => ({
+  app: state.app,
+}),
+dispatch => ({
+  appStart: () => dispatch(AppActions.startApp()),
+}))(App);
