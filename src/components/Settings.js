@@ -28,6 +28,14 @@ const checkUrl = url => new Promise( resolve => {
   })
 })
 
+function checkValidImage(data) {
+  const infos = data.split(',')
+  return /jpe?g|png/.test(infos[0])
+}
+function isNumber(data) {
+  return !isNaN(parseInt(data)) 
+}
+
 class Settings extends React.Component {
   constructor(props) {
     super(props)
@@ -55,9 +63,12 @@ class Settings extends React.Component {
   handleFileChange(e, { name, value}) {
     getBase64(e.target.files[0]) 
     .then(data => {
-      this.setState({
-        imageProfile: data
-      })
+
+      if (checkValidImage(data)){
+        this.setState({
+          imageProfile: data
+        })
+      }
     })
   }
 
@@ -94,6 +105,8 @@ class Settings extends React.Component {
     }
     if(!values.phoneNumber) {
       errors.phoneNumber = 'Required'
+    } else if (!isNumber(values.phoneNumber)) {
+      errors.phoneNumber = 'Should be only numbers.'
     } else if (values.phoneNumber && values.phoneNumber.length <= 6){
       errors.phoneNumber = 'Phone numbers are greater than 6 digits.'
     }
@@ -109,7 +122,7 @@ class Settings extends React.Component {
       <Item>
         <Item.Image size="large">
           <img src={imageProfile || noimage}/>
-          <Form.Input type="file" onChange={this.handleFileChange} name="profile" />
+          <Form.Input type="file" onChange={this.handleFileChange} name="profile"/>
         </Item.Image>
         <Item.Content>
           <Item.Header>
@@ -213,13 +226,12 @@ class Settings extends React.Component {
                   )}
                 </Field>
 
-
                 <Form.Group>
-                  <Button disabled={pristine || submitting || invalid}>
+                  <Button primary disabled={pristine || submitting || invalid}>
                     Save
                   </Button>
-                  <Button>
-                    Delete
+                  <Button onClick={reset}>
+                    Reset
                   </Button>
                 </Form.Group>
               </Form>
