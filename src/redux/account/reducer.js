@@ -17,7 +17,11 @@ export default function reducer(state = initialState, action) {
         error: null,
       }
     }
-
+    case Actions.LOGOUT.SUCCESS: {
+      return {
+        ...initialState,
+      }
+    }
     case Actions.LOGIN.SUCCESS: {
       const { email } = action.payload 
       return {

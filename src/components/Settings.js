@@ -36,7 +36,7 @@ function checkValidImage(data) {
   return /jpe?g|png/.test(infos[0])
 }
 function isNumber(data) {
-  return !isNaN(parseInt(data)) 
+  return !isNaN(parseInt(data, 10)) 
 }
 
 class Settings extends React.Component {
@@ -131,13 +131,13 @@ class Settings extends React.Component {
   
   render() {
     const { data, loading, email, onClear } = this.props
-    const { imageProfile, name, lastname, address1, address2, altEmail, phoneNumber, github, linkedIn } = this.state
+    const { imageProfile } = this.state
     console.log(data)
     return (
       <Item.Group>
       <Item>
         <Item.Image size="large">
-          <img src={imageProfile || noimage}/>
+          <img alt="Profile" src={imageProfile || noimage}/>
           <Form.Input type="file" onChange={this.handleFileChange} name="profile"/>
         </Item.Image>
         <Item.Content>

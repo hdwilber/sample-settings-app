@@ -48,6 +48,7 @@ export function login(data, options = {}) {
 }
 
 export function logout() {
+  localStorage.removeItem('session')
   return {
     type: LOGOUT.SUCCESS,
   }

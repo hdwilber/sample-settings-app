@@ -108,9 +108,12 @@ class App extends Component {
   }
 
   render() {
-    const { app, account } = this.props
+    const { account } = this.props
     return (
       <div>
+        {(account && account.loggedIn) && (
+          <Button className="logout" primary onClick={this.props.logout}>Logout</Button>
+        )}
         {this.renderLoader()}
         {this.renderSettings()}
         {this.renderHome()}

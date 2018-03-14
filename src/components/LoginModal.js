@@ -1,5 +1,5 @@
 import React from 'react'
-import { Message, TransitionablePortal, Checkbox, Modal, Input, Label, Form, Button } from 'semantic-ui-react'
+import { Message, TransitionablePortal, Modal, Input, Form, Button } from 'semantic-ui-react'
 import { Form as FinalForm, Field } from 'react-final-form'
 
 const inlineStyle = {
@@ -74,7 +74,7 @@ class LoginModal extends React.Component {
   }
 
   render() {
-    const { open, onLogin, onCancel, loading, error } = this.props
+    const { open, onCancel, loading, error } = this.props
     return (
       <TransitionablePortal
         open={open} 
