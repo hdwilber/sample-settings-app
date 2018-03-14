@@ -27,10 +27,11 @@ export function login(data, options = {}) {
         if (options.save)
           localStorage.setItem('session', JSON.stringify(data))
 
-        return dispatch({
+        dispatch({
           type: LOGIN.SUCCESS,
           payload: data,
         })
+        dispatch(settingsRestore())
       } else {
         return dispatch({
           type: LOGIN.FAILED,
