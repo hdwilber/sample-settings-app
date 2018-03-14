@@ -20,7 +20,10 @@ function getBase64(file) {
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const checkUrl = url => new Promise( resolve => {
   fetch(url).then (response => {
-    if (response.ok) {
+    if (response.status === 403) {
+      resolve(true)
+    }
+    else if (response.ok) {
       resolve(true)
     } else {
       resolve(false)
@@ -59,7 +62,6 @@ class Settings extends React.Component {
     this.checkGithub = this.checkGithub.bind(this)
   }
 
-
   handleFileChange(e, { name, value}) {
     getBase64(e.target.files[0]) 
     .then(data => {
@@ -72,12 +74,20 @@ class Settings extends React.Component {
     })
   }
 
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.data !== undefined) {
+      const { data } = nextProps
+      this.setState({
+        imageProfile: data && data.imageProfile,
+      })
+    }
+  }
   handleChange(e, { name, value }) {
     this.setState({
       [name]: value,
     })
   }
-
 
   async checkGithub(value) {
     if (value) {
@@ -90,6 +100,11 @@ class Settings extends React.Component {
 
   handleSubmit(values) {
     // To submit
+    const { onSave }  = this.props
+    onSave({
+      ...values,
+      imageProfile: this.state.imageProfile,
+    })
   }
 
   validate(values) {
@@ -115,8 +130,9 @@ class Settings extends React.Component {
   }
   
   render() {
-    const { loading, email } = this.props
+    const { data, loading, email, onClear } = this.props
     const { imageProfile, name, lastname, address1, address2, altEmail, phoneNumber, github, linkedIn } = this.state
+    console.log(data)
     return (
       <Item.Group>
       <Item>
@@ -129,138 +145,143 @@ class Settings extends React.Component {
             {email}
           </Item.Header>
 
-          <Item.Description as={FinalForm} 
-            onSubmit={this.handleSubmit}
-            validate={this.validate}
-            render={({ submitError, handleSubmit, reset, submitting, pristine, values, invalid}) => (
-              <Form error>
-                <Field
-                  name="name" 
-                >
-                  {({input, meta}) => (
-                    <Form.Field>
-                      <label>Name</label>
-                      <Input {...input} placeholder="Enter your name"
-                        error={(meta.error || meta.submitError)}
-                      />
-                      {(meta.error || meta.submitError) &&
-                      meta.touched && (
-                        <Message error attached="bottom">
-                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
-                        </Message>
-                      )}
-                    </Form.Field>
-                  )}
-                </Field>
+          <Item.Description>
+            <FinalForm
+              onSubmit={this.handleSubmit}
+              validate={this.validate}
+              initialValues={data || {}}
+              render={({ submitError, handleSubmit, reset, submitting, pristine, values, invalid}) => (
+                <Form onSubmit={handleSubmit} error>
+                  <Field
+                    name="name" 
+                  >
+                    {({input, meta}) => (
+                      <Form.Field>
+                        <label>Name</label>
+                        <Input {...input} placeholder="Enter your name"
+                          error={(meta.error || meta.submitError)}
+                        />
+                        {(meta.error || meta.submitError) &&
+                        meta.touched && (
+                          <Message error attached="bottom">
+                            <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                          </Message>
+                        )}
+                      </Form.Field>
+                    )}
+                  </Field>
 
-                <Field
-                  name="lastname" 
-                >
-                  {({input, meta}) => (
-                    <Form.Field>
-                      <label>Lastname</label>
-                      <Input {...input} placeholder="Enter your lastname"
-                        error={(meta.error || meta.submitError)}
-                      />
-                      {(meta.error || meta.submitError) &&
-                      meta.touched && (
-                        <Message error attached="bottom">
-                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
-                        </Message>
-                      )}
-                    </Form.Field>
-                  )}
-                </Field>
+                  <Field
+                    name="lastname" 
+                  >
+                    {({input, meta}) => (
+                      <Form.Field>
+                        <label>Lastname</label>
+                        <Input {...input} placeholder="Enter your lastname"
+                          error={(meta.error || meta.submitError)}
+                        />
+                        {(meta.error || meta.submitError) &&
+                        meta.touched && (
+                          <Message error attached="bottom">
+                            <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                          </Message>
+                        )}
+                      </Form.Field>
+                    )}
+                  </Field>
 
-                <Field
-                  name="address1" 
-                >
-                  {({input, meta}) => (
-                    <Form.Field>
-                      <label>Main Address</label>
-                      <Input {...input} placeholder="Enter your main address"
-                        error={(meta.error || meta.submitError)}
-                      />
-                      {(meta.error || meta.submitError) &&
-                      meta.touched && (
-                        <Message error attached="bottom">
-                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
-                        </Message>
-                      )}
-                    </Form.Field>
-                  )}
-                </Field>
+                  <Field
+                    name="address1" 
+                  >
+                    {({input, meta}) => (
+                      <Form.Field>
+                        <label>Main Address</label>
+                        <Input {...input} placeholder="Enter your main address"
+                          error={(meta.error || meta.submitError)}
+                        />
+                        {(meta.error || meta.submitError) &&
+                        meta.touched && (
+                          <Message error attached="bottom">
+                            <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                          </Message>
+                        )}
+                      </Form.Field>
+                    )}
+                  </Field>
 
-                <Field
-                  name="address2" 
-                >
-                  {({input, meta}) => (
-                    <Form.Field>
-                      <label>Secondary Address</label>
-                      <Input {...input} placeholder="Enter your secondary address"
-                        error={(meta.error || meta.submitError)}
-                      />
-                      {(meta.error || meta.submitError) &&
-                      meta.touched && (
-                        <Message error attached="bottom">
-                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
-                        </Message>
-                      )}
-                    </Form.Field>
-                  )}
-                </Field>
+                  <Field
+                    name="address2" 
+                  >
+                    {({input, meta}) => (
+                      <Form.Field>
+                        <label>Secondary Address</label>
+                        <Input {...input} placeholder="Enter your secondary address"
+                          error={(meta.error || meta.submitError)}
+                        />
+                        {(meta.error || meta.submitError) &&
+                        meta.touched && (
+                          <Message error attached="bottom">
+                            <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                          </Message>
+                        )}
+                      </Form.Field>
+                    )}
+                  </Field>
 
-                <Field
-                  name="phoneNumber" 
-                >
-                  {({input, meta}) => (
-                    <Form.Field>
-                      <label>Phone Number</label>
-                      <Input {...input} placeholder="Enter your phone number"
-                        error={(meta.error || meta.submitError)}
-                      />
-                      {(meta.error || meta.submitError) &&
-                      meta.touched && (
-                        <Message error attached="bottom">
-                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
-                        </Message>
-                      )}
-                    </Form.Field>
-                  )}
-                </Field>
+                  <Field
+                    name="phoneNumber" 
+                  >
+                    {({input, meta}) => (
+                      <Form.Field>
+                        <label>Phone Number</label>
+                        <Input {...input} placeholder="Enter your phone number"
+                          error={(meta.error || meta.submitError)}
+                        />
+                        {(meta.error || meta.submitError) &&
+                        meta.touched && (
+                          <Message error attached="bottom">
+                            <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                          </Message>
+                        )}
+                      </Form.Field>
+                    )}
+                  </Field>
 
-                <Field
-                  name="github" 
-                  validate={this.checkGithub}
-                >
-                  {({input, meta}) => (
-                    <Form.Field>
-                      <label>Github Account</label>
-                      <Input {...input} placeholder="Enter you github account name"
-                        icon='github' iconPosition='left'
-                        error={(meta.error || meta.submitError)}
-                      />
-                      {(meta.error || meta.submitError) &&
-                      meta.touched && (
-                        <Message error attached="bottom">
-                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
-                        </Message>
-                      )}
-                    </Form.Field>
-                  )}
-                </Field>
+                  <Field
+                    name="github" 
+                    validate={this.checkGithub}
+                  >
+                    {({input, meta}) => (
+                      <Form.Field>
+                        <label>Github Account</label>
+                        <Input {...input} placeholder="Enter you github account name"
+                          icon='github' iconPosition='left'
+                          error={(meta.error || meta.submitError)}
+                        />
+                        {(meta.error || meta.submitError) &&
+                        meta.touched && (
+                          <Message error attached="bottom">
+                            <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                          </Message>
+                        )}
+                      </Form.Field>
+                    )}
+                  </Field>
 
-                <Form.Group>
-                  <Button primary disabled={pristine || submitting || invalid}>
-                    Save
-                  </Button>
-                  <Button onClick={reset}>
-                    Reset
-                  </Button>
-                </Form.Group>
-              </Form>
-            )}
-          >
+                  <Form.Group>
+                    <Button loading={loading} type="submit" primary disabled={pristine || submitting || invalid}>
+                      Save
+                    </Button>
+                    <Button onClick={reset}>
+                      Reset
+                    </Button>
+                    <Button secondary onClick={(e)=>{e.preventDefault(); reset(); onClear()}}>
+                      Clear
+                    </Button>
+                  </Form.Group>
+                </Form>
+              )}
+            />
           </Item.Description>
         </Item.Content>
       </Item>

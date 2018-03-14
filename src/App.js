@@ -17,6 +17,8 @@ class App extends Component {
     this.handleOpenLogin = this.handleOpenLogin.bind(this)
     this.handleCloseLogin = this.handleCloseLogin.bind(this)
     this.handleLogin = this.handleLogin.bind(this)
+    this.handleSettingsSave = this.handleSettingsSave.bind(this)
+    this.handleSettingsClear = this.handleSettingsClear.bind(this)
   }
 
   componentDidMount() {
@@ -41,6 +43,12 @@ class App extends Component {
     })
   }
 
+  handleSettingsSave(data) {
+    console.log(data)
+    const { saveSettings } = this.props
+    saveSettings(data)
+  }
+
   componentWillReceiveProps(nextProps) {
     const { account } = nextProps
     if ( account && account.email ) {
@@ -60,6 +68,11 @@ class App extends Component {
         <Loader>Loading the sample application</Loader>
       </Dimmer>
     )
+  }
+
+  handleSettingsClear() {
+    const { clearSettings } = this.props
+    clearSettings()
   }
 
   renderHome() {
@@ -84,7 +97,9 @@ class App extends Component {
           <Grid.Column width={16}>
             <Header size="huge">Settings to configure your information ({account && account.email}) </Header>
             <Settings onSave={this.handleSettingsSave}
-              onReset={this.handleSettingsReset}
+              onClear={this.handleSettingsClear}
+              loading={account && account.loading}
+              data={account && account.settings}
             />
           </Grid.Column>
         </Grid>
@@ -121,5 +136,7 @@ dispatch => ({
   appStart: () => dispatch(AppActions.startApp()),
   login: (data, opts) => dispatch(AccountActions.login(data, opts)),
   logout: () => dispatch(AccountActions.logout()),
+  saveSettings : (data, options) => dispatch(AccountActions.saveSettings(data, options)),
+  clearSettings: () => dispatch(AccountActions.clearSettings()),
 })) (App)
 

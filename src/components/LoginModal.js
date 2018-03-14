@@ -11,6 +11,11 @@ const inlineStyle = {
   }
 };
 
+function checkEmail(email) {
+  // Taken from http://emailregex.com/
+  return /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(email)
+}
+
 class LoginModal extends React.Component {
 
   constructor(props) {
@@ -55,12 +60,14 @@ class LoginModal extends React.Component {
     const errors = {}
 
     if (!values.email) {
-      errors.email = "Required"
+      errors.email = 'Required'
+    } else if (!checkEmail(values.email)) {
+      errors.email = 'Not valid email'
     }
     if (!values.password) {
-      errors.password = "Required"
+      errors.password = 'Required'
     } else if(values.password.length <= 3){
-      errors.password = "Length must be at least 4 characters"
+      errors.password = 'Length must be at least 4 characters'
     }
     return errors
 
@@ -93,7 +100,11 @@ class LoginModal extends React.Component {
                         error={(meta.error || meta.submitError)}
                       />
                       {(meta.error || meta.submitError) &&
-                        meta.touched && <span>{meta.error || meta.submitError}</span>}
+                      meta.touched && (
+                        <Message error attached="bottom">
+                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                        </Message>
+                      )}
                     </Form.Field>
                   )}
                 </Field>
@@ -108,7 +119,11 @@ class LoginModal extends React.Component {
                         error={(meta.error || meta.submitError)}
                       />
                       {(meta.error || meta.submitError) &&
-                        meta.touched && <span>{meta.error || meta.submitError}</span>}
+                      meta.touched && (
+                        <Message error attached="bottom">
+                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                        </Message>
+                      )}
                     </Form.Field>
                   )}
                 </Field>

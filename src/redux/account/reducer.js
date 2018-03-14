@@ -5,6 +5,7 @@ const initialState = {
   loggedIn: false,
   email: null,
   error: null,
+  settings: null,
 }
 
 export default function reducer(state = initialState, action) {
@@ -52,6 +53,54 @@ export default function reducer(state = initialState, action) {
       return {
         ...initialState,
         error: action.payload,
+      }
+    }
+    case Actions.SAVE_SETTINGS.INIT: {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+
+    case Actions.SAVE_SETTINGS.SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        settings: action.payload,
+      }
+    }
+    case Actions.SAVE_SETTINGS.FAILED: {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      }
+    }
+    case Actions.SETTINGS_RESTORE.INIT: {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+
+    case Actions.SETTINGS_RESTORE.SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        settings: action.payload,
+      }
+    }
+    case Actions.SETTINGS_RESTORE.FAILED: {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      }
+    }
+    case Actions.CLEAR_SETTINGS.INIT: {
+      return {
+        ...state,
+        settings: null,
       }
     }
   }
