@@ -1,5 +1,5 @@
 import React from 'react'
-import { TransitionablePortal, Checkbox, Modal, Input, Label, Form, Button } from 'semantic-ui-react'
+import { Message, TransitionablePortal, Checkbox, Modal, Input, Label, Form, Button } from 'semantic-ui-react'
 import { Form as FinalForm, Field } from 'react-final-form'
 
 const inlineStyle = {
@@ -67,7 +67,7 @@ class LoginModal extends React.Component {
   }
 
   render() {
-    const { open, onLogin, onCancel, loading } = this.props
+    const { open, onLogin, onCancel, loading, error } = this.props
     return (
       <TransitionablePortal
         open={open} 
@@ -81,49 +81,43 @@ class LoginModal extends React.Component {
           <FinalForm
             onSubmit={this.handleSubmit}
             validate={this.validate}
-            render={({ submitError, handleSubmit, reset, submitting, pristine, values}) => (
-              <Form onSubmit={handleSubmit}>
-                  <Field
-                    name="email" 
-                  >
-                    {({input, meta}) => (
-                      <Form.Field>
-                        <label>Email</label>
-                        <Input {...input} type="email" placeholder="Enter your email"
-                          error={(meta.error || meta.submitError)}
-                        />
-                        {(meta.error || meta.submitError) &&
-                          meta.touched && <span>{meta.error || meta.submitError}</span>}
-                      </Form.Field>
-                    )}
-                  </Field>
-
-                  <Field
-                    name="password" 
-                  >
-                    {({input, meta}) => (
-                      <Form.Field>
-                        <label>Password</label>
-                        <Input {...input} type="password" placeholder="Your password"
-                          error={(meta.error || meta.submitError)}
-                        />
-                        {(meta.error || meta.submitError) &&
-                          meta.touched && <span>{meta.error || meta.submitError}</span>}
-                      </Form.Field>
-                    )}
-                  </Field>
-
-                  <Field
-                    name="save" 
-                    type="checkbox"
-                  >
-                    {({input, meta}) => {
-                    console.log('ASDFAFSFAS')
-                    console.log(input)
-                    console.log(meta)
-                    return (
-
+            render={({ submitError, handleSubmit, reset, submitting, pristine, values, invalid}) => (
+              <Form error onSubmit={handleSubmit}>
+                <Field
+                  name="email" 
+                >
+                  {({input, meta}) => (
                     <Form.Field>
+                      <label>Email</label>
+                      <Input {...input} type="email" placeholder="Enter your email"
+                        error={(meta.error || meta.submitError)}
+                      />
+                      {(meta.error || meta.submitError) &&
+                        meta.touched && <span>{meta.error || meta.submitError}</span>}
+                    </Form.Field>
+                  )}
+                </Field>
+
+                <Field
+                  name="password" 
+                >
+                  {({input, meta}) => (
+                    <Form.Field>
+                      <label>Password</label>
+                      <Input {...input} type="password" placeholder="Your password"
+                        error={(meta.error || meta.submitError)}
+                      />
+                      {(meta.error || meta.submitError) &&
+                        meta.touched && <span>{meta.error || meta.submitError}</span>}
+                    </Form.Field>
+                  )}
+                </Field>
+
+                <Field
+                  name="save" 
+                  type="checkbox"
+                >
+                  {({input, meta}) => <Form.Field>
                       <Input type="checkbox" {...input}
                         label="Keep session open"
                         labelPosition="right"
@@ -131,12 +125,18 @@ class LoginModal extends React.Component {
                         fluid
                       />
                     </Form.Field>
+                  }
+                </Field>
 
-                    )}}
-                  </Field>
+                {(error && error.FORM) && (
+                  <Message
+                    error
+                    header='Bad Request'
+                    content={error.FORM}
+                  />
+                )}
 
-
-                <Button type="submit" disabled={false} loading={loading}>Login</Button>
+                <Button type="submit" disabled={pristine || submitting || invalid} loading={loading}>Login</Button>
               </Form>
             )}
           />

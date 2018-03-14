@@ -104,6 +104,7 @@ class App extends Component {
           open={this.state.openLogin} 
           onCancel={this.handleCloseLogin}
           onLogin={this.handleLogin}
+          error={account && account.error}
         />
       </div>
     )

@@ -24,7 +24,9 @@ export function login(data, options = {}) {
       } else {
         return dispatch({
           type: LOGIN.FAILED,
-          payload: 'Wrong credentials'
+          payload: {
+            FORM: 'Not valid credentials',
+          }
         })
       }
     }, 1000)
