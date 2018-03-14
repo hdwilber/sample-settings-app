@@ -62,7 +62,7 @@ class LoginModal extends React.Component {
     } else if(values.password.length <= 3){
       errors.password = "Length must be at least 4 characters"
     }
-    return errors;
+    return errors
 
   }
 
