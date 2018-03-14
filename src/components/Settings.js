@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Button, Form, Item } from 'semantic-ui-react'
+import { Message, Input, Button, Form, Item } from 'semantic-ui-react'
 import { Form as FinalForm, Field } from 'react-final-form'
 
 import noimage from '../images/noimage.png'
@@ -144,7 +144,11 @@ class Settings extends React.Component {
                         error={(meta.error || meta.submitError)}
                       />
                       {(meta.error || meta.submitError) &&
-                        meta.touched && <span>{meta.error || meta.submitError}</span>}
+                      meta.touched && (
+                        <Message error attached="bottom">
+                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                        </Message>
+                      )}
                     </Form.Field>
                   )}
                 </Field>
@@ -159,7 +163,11 @@ class Settings extends React.Component {
                         error={(meta.error || meta.submitError)}
                       />
                       {(meta.error || meta.submitError) &&
-                        meta.touched && <span>{meta.error || meta.submitError}</span>}
+                      meta.touched && (
+                        <Message error attached="bottom">
+                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                        </Message>
+                      )}
                     </Form.Field>
                   )}
                 </Field>
@@ -174,7 +182,11 @@ class Settings extends React.Component {
                         error={(meta.error || meta.submitError)}
                       />
                       {(meta.error || meta.submitError) &&
-                        meta.touched && <span>{meta.error || meta.submitError}</span>}
+                      meta.touched && (
+                        <Message error attached="bottom">
+                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                        </Message>
+                      )}
                     </Form.Field>
                   )}
                 </Field>
@@ -189,7 +201,11 @@ class Settings extends React.Component {
                         error={(meta.error || meta.submitError)}
                       />
                       {(meta.error || meta.submitError) &&
-                        meta.touched && <span>{meta.error || meta.submitError}</span>}
+                      meta.touched && (
+                        <Message error attached="bottom">
+                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                        </Message>
+                      )}
                     </Form.Field>
                   )}
                 </Field>
@@ -204,7 +220,11 @@ class Settings extends React.Component {
                         error={(meta.error || meta.submitError)}
                       />
                       {(meta.error || meta.submitError) &&
-                        meta.touched && <span>{meta.error || meta.submitError}</span>}
+                      meta.touched && (
+                        <Message error attached="bottom">
+                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                        </Message>
+                      )}
                     </Form.Field>
                   )}
                 </Field>
@@ -221,7 +241,11 @@ class Settings extends React.Component {
                         error={(meta.error || meta.submitError)}
                       />
                       {(meta.error || meta.submitError) &&
-                        meta.touched && <span>{meta.error || meta.submitError}</span>}
+                      meta.touched && (
+                        <Message error attached="bottom">
+                          <Message.Header>{meta.error || meta.submitError}</Message.Header>
+                        </Message>
+                      )}
                     </Form.Field>
                   )}
                 </Field>

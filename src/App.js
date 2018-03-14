@@ -65,7 +65,7 @@ class App extends Component {
   renderHome() {
     const { app, account } = this.props
     return (
-      <Transition visible={app && !app.loading}>
+      <Transition visible={app && !app.loading && account && !account.loggedIn}>
         <Grid container>
           <Grid.Column width={16}>
             <Header size="huge">Welcome to the sample application</Header>
