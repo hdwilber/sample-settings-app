@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as AppActions from './redux/app/actions'
 import * as AccountActions from './redux/account/actions'
-import { Dimmer, Loader, Button, Grid, Header } from 'semantic-ui-react'
+import { Transition, Dimmer, Loader, Button, Grid, Header } from 'semantic-ui-react'
 
 import LoginModal from './components/LoginModal'
 import Settings from './components/Settings'
@@ -41,6 +41,15 @@ class App extends Component {
     })
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { account } = nextProps
+    if ( account && account.email ) {
+      this.setState({
+        openLogin: false
+      })
+    }
+  }
+
   renderLoader() {
     const { app } = this.props
     return (
@@ -54,48 +63,51 @@ class App extends Component {
   }
 
   renderHome() {
-    const { account } = this.props
+    const { app, account } = this.props
     return (
-      <Grid container>
-        <Grid.Column width={16}>
-          <Header size="huge">Welcome to the sample application</Header>
-          <Button onClick={this.handleOpenLogin}>Login</Button>
-          <LoginModal 
-            loading = {account && account.loading}
-            open={this.state.openLogin} 
-            onCancel={this.handleCloseLogin}
-            onLogin={this.handleLogin}
-          />
-        </Grid.Column>
-      </Grid>
+      <Transition visible={app && !app.loading}>
+        <Grid container>
+          <Grid.Column width={16}>
+            <Header size="huge">Welcome to the sample application</Header>
+            <Button onClick={this.handleOpenLogin}>Login</Button>
+          </Grid.Column>
+        </Grid>
+      </Transition>
     )
   }
 
   renderSettings() {
     const { account } = this.props
     return (
-      <Grid container>
-        <Grid.Column width={16}>
-          <Header size="huge">Settings to configure your information ({account && account.email}) </Header>
-          <Settings onSave={this.handleSettingsSave}
-            onReset={this.handleSettingsReset}
-          />
-        </Grid.Column>
-      </Grid>
+      <Transition visible={ account && account.loggedIn }>
+        <Grid container>
+          <Grid.Column width={16}>
+            <Header size="huge">Settings to configure your information ({account && account.email}) </Header>
+            <Settings onSave={this.handleSettingsSave}
+              onReset={this.handleSettingsReset}
+            />
+          </Grid.Column>
+        </Grid>
+      </Transition>
     )
   }
 
   render() {
     const { app, account } = this.props
-
-    if ( account && account.loggedIn ) {
-      return this.renderSettings()
-    } 
-
-    if (app && !app.loading) {
-      return this.renderHome()
-    } 
-    return this.renderLoader()
+    return (
+      <div>
+        {this.renderLoader()}
+        {this.renderSettings()}
+        {this.renderHome()}
+        <LoginModal 
+          loading = {account && account.loading}
+          open={this.state.openLogin} 
+          onCancel={this.handleCloseLogin}
+          onLogin={this.handleLogin}
+        />
+      </div>
+    )
+    
 
   }
 }

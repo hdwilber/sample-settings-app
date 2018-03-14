@@ -1,5 +1,6 @@
 import React from 'react'
-import { Modal, Form, Button } from 'semantic-ui-react'
+import { TransitionablePortal, Checkbox, Modal, Input, Label, Form, Button } from 'semantic-ui-react'
+import { Form as FinalForm, Field } from 'react-final-form'
 
 const inlineStyle = {
   modal : {
@@ -31,10 +32,9 @@ class LoginModal extends React.Component {
     })
   }
 
-  handleSubmit(e) {
+  handleSubmit(values) {
     const { onLogin } = this.props
-    e.preventDefault()
-    const { save, email, password } = this.state
+    const { save, email, password } = values
     onLogin({
       email,
       password,
@@ -49,39 +49,100 @@ class LoginModal extends React.Component {
     })
   }
 
+  validate(values) {
+    console.log('Validate')
+    console.log(values)
+    const errors = {}
+
+    if (!values.email) {
+      errors.email = "Required"
+    }
+    if (!values.password) {
+      errors.password = "Required"
+    } else if(values.password.length <= 3){
+      errors.password = "Length must be at least 4 characters"
+    }
+    return errors;
+
+  }
+
   render() {
     const { open, onLogin, onCancel, loading } = this.props
     return (
-      <Modal 
-        style={inlineStyle.modal} 
-        open={open} onClose={onCancel}
-        size="tiny"
+      <TransitionablePortal
+        open={open} 
       >
-        <Modal.Header>
-          Log in to the application
-        </Modal.Header>
+        <Modal open={true}
+          size="tiny"
+          style={inlineStyle.modal} 
+          onClose={onCancel}
+        >
         <Modal.Content>
-          <Form onSubmit={this.handleSubmit}>
-            <Form.Input 
-              value={this.state.email}
-              name="email" type="email" label="Email" onChange={this.handleChange}/>
-            <Form.Input 
-              value={this.state.password}
-              name="password" type="password" label="Password" onChange={this.handleChange}/>
-            <Form.Checkbox 
-              name="save" 
-              value={this.state.save}
-              onChange={this.handleCheckboxChange}
-              label="Keep session"
-            />
+          <FinalForm
+            onSubmit={this.handleSubmit}
+            validate={this.validate}
+            render={({ submitError, handleSubmit, reset, submitting, pristine, values}) => (
+              <Form onSubmit={handleSubmit}>
+                  <Field
+                    name="email" 
+                  >
+                    {({input, meta}) => (
+                      <Form.Field>
+                        <label>Email</label>
+                        <Input {...input} type="email" placeholder="Enter your email"
+                          error={(meta.error || meta.submitError)}
+                        />
+                        {(meta.error || meta.submitError) &&
+                          meta.touched && <span>{meta.error || meta.submitError}</span>}
+                      </Form.Field>
+                    )}
+                  </Field>
 
-            <Button.Group>
-              <Button loading={loading}>Login</Button>
-            </Button.Group>
+                  <Field
+                    name="password" 
+                  >
+                    {({input, meta}) => (
+                      <Form.Field>
+                        <label>Password</label>
+                        <Input {...input} type="password" placeholder="Your password"
+                          error={(meta.error || meta.submitError)}
+                        />
+                        {(meta.error || meta.submitError) &&
+                          meta.touched && <span>{meta.error || meta.submitError}</span>}
+                      </Form.Field>
+                    )}
+                  </Field>
 
-          </Form>
+                  <Field
+                    name="save" 
+                    type="checkbox"
+                  >
+                    {({input, meta}) => {
+                    console.log('ASDFAFSFAS')
+                    console.log(input)
+                    console.log(meta)
+                    return (
+
+                    <Form.Field>
+                      <Input type="checkbox" {...input}
+                        label="Keep session open"
+                        labelPosition="right"
+                        size="tiny"
+                        fluid
+                      />
+                    </Form.Field>
+
+                    )}}
+                  </Field>
+
+
+                <Button type="submit" disabled={false} loading={loading}>Login</Button>
+              </Form>
+            )}
+          />
         </Modal.Content>
       </Modal>
+      </TransitionablePortal>
     )
   }
 }
